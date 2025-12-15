@@ -59,7 +59,7 @@ export const columns: ColumnDef<Item>[] = [
     }
   },
   {
-    accessorKey: "notes",
-    header: "Notes",
+    accessorKey: "note",
+    header: "Note",
   },
 ]

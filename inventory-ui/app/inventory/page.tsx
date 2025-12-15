@@ -1,5 +1,5 @@
 import { columns, Item } from "./columns";
-import { getInventory } from "../client";
+import { getInventory } from "../../lib/api";
 import { DataTable } from "./data-table";
 
 export default async function HomePage() {
