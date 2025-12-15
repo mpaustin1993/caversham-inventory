@@ -1,16 +1,20 @@
-import { columns, Payment } from "./columns"
+import { columns, Item } from "./columns"
 import { DataTable } from "./data-table"
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<Item[]> {
   // Fetch data from your API here.
   return [
     {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    // ...
+      id: 0,
+      name: "Milk",
+      category: "Dairy",
+      quantity: 1.0,
+      unit: "gallon",
+      location: "Fridge",
+      expiration_date: new Date("2024-07-01"),
+      restock_threshold: 0.5,
+      notes: "Non-dairy"
+    }
   ]
 }
 

@@ -28,7 +28,7 @@ func GetInventory(connection *sql.DB, w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Mapping query result to slice of type: %s\n", reflect.TypeFor[models.Item]().String()[strings.LastIndex(reflect.TypeFor[models.Item]().String(), ".")+1:])
 	for rows.Next() {
 		var item models.Item
-		if err := rows.Scan(&item.ID, &item.Item_Name, &item.Category, &item.Quantity, &item.Unit, &item.Location, &item.Expiration_Date, &item.Restock_Threshold, &item.Notes); err != nil {
+		if err := rows.Scan(&item.ID, &item.Name, &item.Category, &item.Quantity, &item.Unit, &item.Location, &item.Expiration_Date, &item.Restock_Threshold, &item.Note); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}

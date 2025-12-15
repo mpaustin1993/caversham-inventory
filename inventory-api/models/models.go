@@ -13,5 +13,5 @@ type Item struct {
 	Location          string    `json:"location"`
 	Expiration_Date   time.Time `json:"expiration_date"`
 	Restock_Threshold float64   `json:"restock_threshold"`
-	Notes             string    `json:"notes"`
+	Note              string    `json:"note"`
 }

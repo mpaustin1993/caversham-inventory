@@ -4,14 +4,19 @@ import { ColumnDef } from "@tanstack/react-table"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
+export type Item = {
+  id: number
+  name: string
+  category: string
+  quantity: number
+  unit: string
+  location: string
+  expiration_date: Date
+  restock_threshold: number
+  notes?: string  
 }
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Item>[] = [
     {
     accessorKey: "category",
     header: "Category",
@@ -21,7 +26,7 @@ export const columns: ColumnDef<Payment>[] = [
     header: "Quantity",
   },
   {
-    accessorKey: "item_name",
+    accessorKey: "name",
     header: "Item",
   },
   {
