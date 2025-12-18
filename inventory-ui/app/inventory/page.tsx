@@ -5,8 +5,8 @@ import { DataTable } from "./data-table";
 export default async function HomePage() {
   const data = await getInventory();
 
-  return (
-    <div className="container mx-auto py-10">
+  return (    
+    <div className="container mx-auto py-8">      
       <DataTable columns={columns} data={data} />
     </div>
   );
