@@ -8,8 +8,11 @@ import (
 
 func Configure(db *sql.DB) {
 	http.HandleFunc("/inventory", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodGet {
+		switch r.Method {
+		case http.MethodGet:
 			handlers.GetInventory(db, w, r)
+		case http.MethodPost:
+			handlers.CreateItem(db, w, r)
 		}
 	})
 }
