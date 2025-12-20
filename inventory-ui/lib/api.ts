@@ -1,4 +1,4 @@
-import { Item } from "../app/inventory/columns";
+import { Item } from "../app/inventory/components/columnsnts/columns";
 
 const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_URL || "http://localhost:8080";
 

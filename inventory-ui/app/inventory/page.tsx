@@ -1,6 +1,6 @@
-import { columns, Item } from "./columns";
+import { columns } from "./components/columns";
+import { DataTable } from "./components/data-table";
 import { getInventory } from "../../lib/api";
-import { DataTable } from "./data-table";
 
 export default async function HomePage() {
   const data = await getInventory();
