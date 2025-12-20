@@ -3,8 +3,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 config.autoAddCss = false
 
 import HomePage from "./inventory/page";
-import { Button } from "@/components/ui/button"
-import { ItemPopover } from './create/page';
+import { Form } from './form/page';
 
 
 export default function Home() {
@@ -14,7 +13,7 @@ export default function Home() {
         Caversham Inventory
       </h1>
       <div className="pt-6 flex justify-center">
-        <ItemPopover />      
+        <Form />      
       </div>
       <HomePage />
     </div>
