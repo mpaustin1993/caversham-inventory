@@ -13,7 +13,7 @@ export function ItemForm() {
       <PopoverTrigger asChild>
         <Button variant="outline">Create Item</Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
+      <PopoverContent side="bottom" sideOffset={-60} align="center" className="w-80">
         <ItemFormContent />
       </PopoverContent>
     </Popover>

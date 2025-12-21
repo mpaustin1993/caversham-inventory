@@ -4,7 +4,6 @@ import * as React from "react"
 import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -14,17 +13,17 @@ import {
 } from "@/components/ui/popover"
 
 export function DatePicker({
+  id,
+  name,
   value,
   onChange,
-  name,
-  id,
   onBlur,
   "aria-invalid": ariaInvalid
 }: {
+  id?: string;
+  name?: string;
   value?: string | Date;
   onChange?: (value: string) => void;
-  name?: string;
-  id?: string;
   onBlur?: React.FocusEventHandler;
   "aria-invalid"?: boolean;
 }) {
@@ -35,11 +34,11 @@ export function DatePicker({
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          id={id}
+          name={name}
+          className="data-[empty=true]:text-muted-foreground w-[69%] justify-start text-left font-normal"
           variant="outline"
           data-empty={!date}
-          className="data-[empty=true]:text-muted-foreground w-full justify-start text-left font-normal"
-          name={name}
-          id={id}
           onBlur={onBlur}
           aria-invalid={ariaInvalid}
         >

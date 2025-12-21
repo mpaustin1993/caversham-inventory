@@ -25,14 +25,14 @@ import {
 
  
 const formSchema = z.object({
-  name: z.string(),
-  category: z.string(),
-  quantity: z.string(),
-  unit: z.string(),
-  location: z.string(),
-  expiration_date: z.string(),
-  restock_threshold: z.string(),
-  note: z.string(),
+  name: z.string().min(1, "*"),
+  category: z.string().min(1, "*"),
+  quantity: z.number().min(1, "*"),
+  unit: z.string().min(1, "*"),
+  location: z.string().min(1, "*"),
+  expiration_date: z.string().min(1, "*"),
+  restock_threshold: z.number().min(1, "*"),
+  note: z.string().min(1, "*"),
 })
 
 export function ItemFormContent() {
@@ -40,31 +40,18 @@ export function ItemFormContent() {
     defaultValues: {
       name: "",
       category: "",
-      quantity: "",
+      quantity: 0,
       unit: "",
       location: "",
       expiration_date: "",
-      restock_threshold: "",
+      restock_threshold: 0,
       note: "",
     },
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      toast("You submitted the following values:", {
-        description: (
-          <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-            <code>{JSON.stringify(value, null, 2)}</code>
-          </pre>
-        ),
-        position: "bottom-right",
-        classNames: {
-          content: "flex flex-col gap-2",
-        },
-        style: {
-          "--border-radius": "calc(var(--radius)  + 4px)",
-        } as React.CSSProperties,
-      })
+      console.log("Form submitted:", value)
     },
   })
   return (
@@ -147,9 +134,9 @@ export function ItemFormContent() {
                       <Input
                         id={field.name}
                         name={field.name}
-                        value={field.state.value}
+                        value={!isNaN(Number(field.state.value)) ? field.state.value : 0}
                         onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
+                        onChange={(e) => field.handleChange(!isNaN(Number(e.target.value)) ? parseInt(e.target.value) : 0)}
                         aria-invalid={isInvalid}
                         placeholder="Quantity"
                         autoComplete="off"
@@ -220,21 +207,19 @@ export function ItemFormContent() {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
                 return (
-                  <Field orientation="horizontal" className="items-center gap-3" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name} className="w-28">Expiration Date</FieldLabel>
-                    <div className="flex-1">
+                  <Field orientation="horizontal" className="items-center" data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name} className="w-28">Expiration<br /> Date</FieldLabel>                    
                       <DatePicker
-                        value={field.state.value}
-                        onChange={field.handleChange}
-                        name={field.name}
                         id={field.name}
+                        name={field.name}
+                        value={field.state.value}
                         onBlur={field.handleBlur}
+                        onChange={field.handleChange}
                         aria-invalid={isInvalid}
                       />
                       {isInvalid && (
                         <FieldError className="mt-1" errors={field.state.meta.errors} />
-                      )}
-                    </div>
+                      )}                    
                   </Field>
                 )
               }}
@@ -250,9 +235,9 @@ export function ItemFormContent() {
                       <Input
                         id={field.name}
                         name={field.name}
-                        value={field.state.value}
+                        value={!isNaN(Number(field.state.value)) ? field.state.value : 0}
                         onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
+                        onChange={(e) => field.handleChange(!isNaN(Number(e.target.value)) ? parseInt(e.target.value) : 0)}
                         aria-invalid={isInvalid}
                         placeholder="Restock Threshold"
                         autoComplete="off"
@@ -299,7 +284,7 @@ export function ItemFormContent() {
           <Button type="button" variant="outline" onClick={() => form.reset()}>
             Clear
           </Button>
-          <Button type="submit" form="bug-report-form">
+          <Button type="submit" form="item-form">
             Submit
           </Button>
         </Field>
