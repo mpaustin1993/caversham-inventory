@@ -36,7 +36,7 @@ export function DatePicker({
         <Button
           id={id}
           name={name}
-          className="data-[empty=true]:text-muted-foreground w-[69%] justify-start text-left font-normal"
+          className="data-[empty=true]:text-muted-foreground w-[74%] justify-start text-left font-normal"
           variant="outline"
           data-empty={!date}
           onBlur={onBlur}
