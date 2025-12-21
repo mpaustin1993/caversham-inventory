@@ -11,7 +11,7 @@ export type Item = {
 }
 
 export type CreateItem = {  
-  name: string
+  item_name: string
   category: string
   quantity: number
   unit: string

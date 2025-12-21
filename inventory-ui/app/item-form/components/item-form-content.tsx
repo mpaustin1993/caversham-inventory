@@ -26,7 +26,7 @@ import { createItem } from "../../../lib/api";
 
  
 const formSchema = z.object({
-  name: z.string().min(1, "*"),
+  item_name: z.string().min(1, "*"),
   category: z.string().min(1, "*"),
   quantity: z.number().min(1, "*"),
   unit: z.string().min(1, "*"),
@@ -39,7 +39,7 @@ const formSchema = z.object({
 export function ItemFormContent() {
   const form = useForm({
     defaultValues: {
-      name: "",
+      item_name: "",
       category: "",
       quantity: 0,
       unit: "",
@@ -80,7 +80,7 @@ export function ItemFormContent() {
         >
           <FieldGroup>
             <form.Field
-              name="name"
+              name="item_name"
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
