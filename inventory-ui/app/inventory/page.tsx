@@ -1,13 +1,23 @@
+"use client"
+
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
-import { getInventory } from "../../lib/api";
+import { useEffect } from "react";
+import { useInventoryStore } from "../../lib/inventory-store";
 
-export default async function HomePage() {
-  const data = await getInventory();
+export default function HomePage() {
+  const { items, loading, error, fetchInventory } = useInventoryStore();
 
-  return (    
-    <div className="container mx-auto py-8">      
-      <DataTable columns={columns} data={data} />
+  useEffect(() => {
+    fetchInventory();
+  }, [fetchInventory]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
+
+  return (
+    <div className="container mx-auto py-8">
+      <DataTable columns={columns} data={items} />
     </div>
   );
 }

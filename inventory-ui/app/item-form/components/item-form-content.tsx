@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import * as z from "zod"
 import { Input } from "@/components/ui/input"
 import { useForm } from "@tanstack/react-form"
@@ -23,6 +22,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { createItem } from "../../../lib/api";
+import { useInventoryStore } from "../../../lib/inventory-store";
 
  
 const formSchema = z.object({
@@ -37,6 +37,7 @@ const formSchema = z.object({
 })
 
 export function ItemFormContent() {
+  const { fetchInventory } = useInventoryStore();
   const form = useForm({
     defaultValues: {
       item_name: "",
@@ -54,7 +55,8 @@ export function ItemFormContent() {
     onSubmit: async ({ value }) => {
       createItem(value).then((createdItem) => {
         if (createdItem) {
-          toast.success("Item created successfully")
+          toast.success("Inventory item created successfully")
+          fetchInventory();
           form.reset()
         } else {
           toast.error("Failed to create item")
