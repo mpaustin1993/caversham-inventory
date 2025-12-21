@@ -22,6 +22,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
+import { createItem } from "../../../lib/api";
 
  
 const formSchema = z.object({
@@ -30,9 +31,9 @@ const formSchema = z.object({
   quantity: z.number().min(1, "*"),
   unit: z.string().min(1, "*"),
   location: z.string().min(1, "*"),
-  expiration_date: z.string().min(1, "*"),
+  expiration_date: z.date().min(1, "*"),
   restock_threshold: z.number().min(1, "*"),
-  note: z.string().min(1, "*"),
+  note: z.string(),
 })
 
 export function ItemFormContent() {
@@ -43,7 +44,7 @@ export function ItemFormContent() {
       quantity: 0,
       unit: "",
       location: "",
-      expiration_date: "",
+      expiration_date: new Date(),
       restock_threshold: 0,
       note: "",
     },
@@ -51,7 +52,14 @@ export function ItemFormContent() {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log("Form submitted:", value)
+      createItem(value).then((createdItem) => {
+        if (createdItem) {
+          toast.success("Item created successfully")
+          form.reset()
+        } else {
+          toast.error("Failed to create item")
+        }
+      })
     },
   })
   return (
@@ -214,7 +222,7 @@ export function ItemFormContent() {
                         name={field.name}
                         value={field.state.value}
                         onBlur={field.handleBlur}
-                        onChange={field.handleChange}
+                        onChange={(value) => field.handleChange(new Date(value))}
                         aria-invalid={isInvalid}
                       />
                       {isInvalid && (

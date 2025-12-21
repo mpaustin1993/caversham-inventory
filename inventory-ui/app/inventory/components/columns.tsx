@@ -1,21 +1,9 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
-
-export type Item = {
-  id: number
-  item_name: string
-  category: string
-  quantity: number
-  unit: string
-  location: string
-  expiration_date: Date
-  restock_threshold: number
-  notes?: string  
-}
+import { Item } from "../../../lib/types";
 
 export const columns: ColumnDef<Item>[] = [
     {
