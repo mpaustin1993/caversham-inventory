@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { getInventory } from './api';
 
 interface InventoryItem {
   id: number
@@ -12,23 +13,21 @@ interface InventoryItem {
   note?: string  
 }
 
-interface InventoryStore {
+interface Store {
   items: InventoryItem[]
   loading: boolean
   error: string | null
   fetchInventory: () => Promise<void>  
 }
 
-export const useInventoryStore = create<InventoryStore>((set) => ({
+export const useStore = create<Store>((set) => ({
   items: [],
   loading: false,
   error: null,
   fetchInventory: async () => {
     set({ loading: true, error: null })
     try {
-      const res = await fetch('http://localhost:8080/inventory')
-      if (!res.ok) throw new Error('Failed to fetch inventory')
-      const data = await res.json()
+      const data = await getInventory()
       set({ items: data, loading: false })
     } catch (err: any) {
       set({ error: err.message, loading: false })

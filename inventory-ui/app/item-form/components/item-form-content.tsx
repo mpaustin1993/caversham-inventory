@@ -22,7 +22,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { createItem } from "../../../lib/api";
-import { useInventoryStore } from "../../../lib/inventory-store";
+import { useStore } from "../../../lib/store";
 
  
 const formSchema = z.object({
@@ -37,7 +37,7 @@ const formSchema = z.object({
 })
 
 export function ItemFormContent() {
-  const { fetchInventory } = useInventoryStore();
+  const { fetchInventory } = useStore();
   const form = useForm({
     defaultValues: {
       item_name: "",

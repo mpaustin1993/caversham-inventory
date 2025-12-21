@@ -3,10 +3,10 @@
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
 import { useEffect } from "react";
-import { useInventoryStore } from "../../lib/inventory-store";
+import { useStore } from "../../lib/store";
 
 export default function HomePage() {
-  const { items, loading, error, fetchInventory } = useInventoryStore();
+  const { items, loading, error, fetchInventory } = useStore();
 
   useEffect(() => {
     fetchInventory();
