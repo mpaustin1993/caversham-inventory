@@ -30,11 +30,14 @@ export const columns: ColumnDef<Item>[] = [
     accessorKey: "expiration_date",
     header: "Expiration Date",
     cell: ({ row }) => {
-      const dateValue = row.getValue("expiration_date");      
-      const date = dateValue instanceof Date ? dateValue : new Date(dateValue as string);
-      const formatted = new Intl.DateTimeFormat('en-US').format(date);
+      const dateValue = row.getValue("expiration_date");
+      if (!dateValue) return <div>-</div>;
+      const dateString = dateValue instanceof Date ? dateValue.toISOString() : dateValue as string;
+      const formatted = dateString.split('T')[0]; // Extract YYYY-MM-DD
+      const [year, month, day] = formatted.split('-');
+      const formattedDate = `${month}/${day}/${year}`; // Convert to MM/DD/YYYY
 
-      return <div>{formatted}</div>
+      return <div>{formattedDate}</div>
     }
   },
   {
