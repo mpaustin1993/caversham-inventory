@@ -13,14 +13,14 @@ interface InventoryItem {
   note?: string  
 }
 
-interface Store {
+interface InventoryStore {
   items: InventoryItem[]
   loading: boolean
   error: string | null
   fetchInventory: () => Promise<void>  
 }
 
-export const useStore = create<Store>((set) => ({
+export const useInventoryStore = create<InventoryStore>((set) => ({
   items: [],
   loading: false,
   error: null,
