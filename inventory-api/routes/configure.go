@@ -29,7 +29,7 @@ func Configure(db *sql.DB) {
 		case http.MethodPut:
 			handlers.UpdateItem(db, w, r, r.PathValue("id"))
 		case http.MethodDelete:
-			handlers.DeleteItem(db, w, r)
+			handlers.DeleteItem(db, w, r, r.PathValue("id"))
 		}
 	})
 }

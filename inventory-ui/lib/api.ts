@@ -55,3 +55,22 @@ export async function updateItem(id: number, item: CreateItem): Promise<Item | n
     return null;
   }
 }
+
+export async function deleteItem(id: number): Promise<Item | null> {
+  try {
+    const response = await fetch(`${API_URL}/inventory/${id}`,{
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Failed to delete item");
+    }
+    const data: Item = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    return null;
+  }
+}

@@ -17,7 +17,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useInventoryStore } from "../../../lib/inventory-store";
 import { useDialogStore } from "../../../lib/dialog-store";
+import { deleteItem } from "@/lib/api";
 
 export const columns: ColumnDef<Item>[] = [
   {
@@ -75,11 +77,18 @@ export const columns: ColumnDef<Item>[] = [
     id: "actions",
     cell: ({ row }) => {
       const { setDialogOpen, setSelectedItem } = useDialogStore();
+      const { fetchInventory } = useInventoryStore();
       
       const handleEdit = () => {
         setSelectedItem(row.original);
         setDialogOpen(true);
       };
+
+      const handleDelete = () => {
+        deleteItem(row.original.id).then(() => {
+          fetchInventory();
+        });
+      }
       
       return (
         <DropdownMenu>
@@ -95,7 +104,7 @@ export const columns: ColumnDef<Item>[] = [
             <DropdownMenuItem onClick={handleEdit}>
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
