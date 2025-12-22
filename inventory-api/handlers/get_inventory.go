@@ -12,7 +12,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var query = "SELECT id, item_name, category, quantity, unit, location, expiration_date, restock_threshold, note FROM inventory"
+var query = "SELECT id, item_name, category, quantity, unit, location, expiration_date, restock_threshold, note FROM inventory ORDER BY id;"
 
 func GetInventory(connection *sql.DB, w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Received %s request for %s\n", r.Method, r.URL.Path)

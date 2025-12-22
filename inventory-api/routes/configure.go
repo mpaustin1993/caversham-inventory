@@ -24,10 +24,10 @@ func Configure(db *sql.DB) {
 	})
 
 	http.HandleFunc("/inventory/{id}", func(w http.ResponseWriter, r *http.Request) {
-		enableCORS(w)
+		enableCORS(w)		
 		switch r.Method {
 		case http.MethodPut:
-			handlers.UpdateItem(db, w, r)
+			handlers.UpdateItem(db, w, r, r.PathValue("id"))
 		case http.MethodDelete:
 			handlers.DeleteItem(db, w, r)
 		}
