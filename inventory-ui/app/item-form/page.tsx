@@ -1,21 +1,43 @@
 "use client"
+
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { ItemFormContent } from "./components/item-form-content";
+import { useDialogStore } from "../../lib/dialog-store";
 
 export function ItemForm() {
+  const { isDialogOpen, setDialogOpen, setSelectedItem } = useDialogStore();
+  
+  const handleOpenChange = (open: boolean) => {
+    setDialogOpen(open);
+    if (!open) {
+      setSelectedItem(null); // Clear selection when closing
+    }
+  };
+
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline">Create Item</Button>
-      </PopoverTrigger>
-      <PopoverContent side="bottom" sideOffset={-60} align="center" className="w-80">
+    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>      
+      <DialogTrigger asChild>
+        <Button 
+          variant="outline" 
+          onClick={() => {
+            setSelectedItem(null); // Creating new item
+            setDialogOpen(true);
+          }}
+        >
+          Create Item
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="w-80">
+        <DialogTitle className="sr-only"/>
         <ItemFormContent />
-      </PopoverContent>
-    </Popover>
+      </DialogContent>
+    </Dialog>
   )
 }
