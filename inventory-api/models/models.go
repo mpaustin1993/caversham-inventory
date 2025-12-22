@@ -1,9 +1,5 @@
 package models
 
-import (
-	"time"
-)
-
 type Item struct {
 	ID                int       `json:"id"`
 	Item_Name         string    `json:"item_name"`
@@ -11,7 +7,7 @@ type Item struct {
 	Quantity          float64   `json:"quantity"`
 	Unit              string    `json:"unit"`
 	Location          string    `json:"location"`
-	Expiration_Date   time.Time `json:"expiration_date"`
+	Expiration_Date   string `json:"expiration_date"`
 	Restock_Threshold float64   `json:"restock_threshold"`
 	Note              string    `json:"note"`
 }

@@ -27,8 +27,18 @@ export function DatePicker({
   onBlur?: React.FocusEventHandler;
   "aria-invalid"?: boolean;
 }) {
-  // Accepts value as ISO string or Date
-  const date = value ? (typeof value === "string" ? (value ? new Date(value) : undefined) : value) : undefined;
+  // Parse date string as local date without timezone conversion
+  let date: Date | undefined;
+  if (value) {
+    if (typeof value === "string" && value) {
+      // Extract YYYY-MM-DD from any date string format
+      const dateOnly = value.split('T')[0];
+      const [year, month, day] = dateOnly.split('-').map(Number);
+      date = new Date(year, month - 1, day); // month is 0-indexed
+    } else if (value instanceof Date) {
+      date = value;
+    }
+  }
 
   return (
     <Popover>
@@ -36,14 +46,14 @@ export function DatePicker({
         <Button
           id={id}
           name={name}
-          className="data-[empty=true]:text-muted-foreground w-[74%] justify-start text-left font-normal"
+          className="data-[empty=true]:text-muted-foreground w-[66%] justify-start text-left font-normal"
           variant="outline"
           data-empty={!date}
           onBlur={onBlur}
           aria-invalid={ariaInvalid}
         >
           <CalendarIcon />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          {date ? format(date, "MM/dd/yyyy") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
@@ -51,7 +61,16 @@ export function DatePicker({
           mode="single"
           selected={date}
           onSelect={(d) => {
-            if (onChange) onChange(d ? d.toISOString() : "");
+            if (onChange) {
+              if (d) {
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                onChange(`${year}-${month}-${day}`);
+              } else {
+                onChange("");
+              }
+            }
           }}
         />
       </PopoverContent>

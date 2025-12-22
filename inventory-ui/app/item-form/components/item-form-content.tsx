@@ -21,8 +21,9 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
-import { createItem } from "../../../lib/api";
+import { createItem, updateItem } from "../../../lib/api";
 import { useInventoryStore } from "../../../lib/inventory-store";
+import { useDialogStore } from "../../../lib/dialog-store";
 
  
 const formSchema = z.object({
@@ -31,45 +32,65 @@ const formSchema = z.object({
   quantity: z.number().min(1, "*"),
   unit: z.string().min(1, "*"),
   location: z.string().min(1, "*"),
-  expiration_date: z.date().min(1, "*"),
+  expiration_date: z.string().min(1, "*"),
   restock_threshold: z.number().min(1, "*"),
   note: z.string(),
 })
 
 export function ItemFormContent() {
   const { fetchInventory } = useInventoryStore();
+  const { setDialogOpen, selectedItem } = useDialogStore();
+  console.log(selectedItem);
+
+  const cardTitle = selectedItem ? "Edit Item" : "Create Item";
+  const cardDescription = selectedItem ? "Edit the item details below." : "Create a new Item by filling out the form below.";
+  const submitButtonText = selectedItem ? "Update" : "Create";
+
   const form = useForm({
     defaultValues: {
-      item_name: "",
-      category: "",
-      quantity: 0,
-      unit: "",
-      location: "",
-      expiration_date: new Date(),
-      restock_threshold: 0,
-      note: "",
+      item_name: selectedItem ? selectedItem.item_name : "",
+      category: selectedItem ? selectedItem.category : "",
+      quantity: selectedItem ? selectedItem.quantity : 0,
+      unit: selectedItem ? selectedItem.unit : "",
+      location: selectedItem ? selectedItem.location : "",
+      expiration_date: selectedItem ? selectedItem.expiration_date.split('T')[0] : new Date().toISOString().split('T')[0],
+      restock_threshold: selectedItem ? selectedItem.restock_threshold : 0,
+      note: selectedItem ? selectedItem.note : "",
     },
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      createItem(value).then((createdItem) => {
-        if (createdItem) {
-          toast.success("Inventory item created successfully")
-          fetchInventory();
-          form.reset()
-        } else {
-          toast.error("Failed to create item")
-        }
-      })
+      if (selectedItem) {
+        updateItem(selectedItem.id, value).then((updatedItem) => {
+          if (updatedItem) {
+            toast.success("Inventory item updated successfully")
+            fetchInventory();
+            form.reset()
+            setDialogOpen(false);
+          } else {
+            toast.error("Failed to update item")
+          }
+        })
+      } else {
+        createItem(value).then((createdItem) => {
+          if (createdItem) {
+            toast.success("Inventory item created successfully")
+            fetchInventory();
+            form.reset()
+          } else {
+            toast.error("Failed to create item")
+          }
+        })
+      }
     },
   })
   return (
     <Card className="w-full sm:max-w-md">
       <CardHeader>
-        <CardTitle>Create Item</CardTitle>
+        <CardTitle>{ cardTitle }</CardTitle>
         <CardDescription>
-          Create a new Item by filling out the form below.
+          { cardDescription}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -224,7 +245,7 @@ export function ItemFormContent() {
                         name={field.name}
                         value={field.state.value}
                         onBlur={field.handleBlur}
-                        onChange={(value) => field.handleChange(new Date(value))}
+                        onChange={(value) => field.handleChange(value)}
                         aria-invalid={isInvalid}
                       />
                       {isInvalid && (
@@ -295,7 +316,7 @@ export function ItemFormContent() {
             Clear
           </Button>
           <Button type="submit" form="item-form">
-            Submit
+            {submitButtonText}
           </Button>
         </Field>
       </CardFooter>

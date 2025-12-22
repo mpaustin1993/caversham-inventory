@@ -5,7 +5,7 @@ export type Item = {
   quantity: number
   unit: string
   location: string
-  expiration_date: Date
+  expiration_date: string
   restock_threshold: number
   note?: string  
 }
@@ -16,7 +16,7 @@ export type CreateItem = {
   quantity: number
   unit: string
   location: string
-  expiration_date: Date
+  expiration_date: string
   restock_threshold: number
-  note: string  
+  note?: string  
 }
