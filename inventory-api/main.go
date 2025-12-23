@@ -15,7 +15,7 @@ var db *sql.DB
 
 func init() {
 	// Load .env (optional for SQLite)
-	_ = godotenv.Load("../.env.local")
+	_ = godotenv.Load("../.env")
 
 	// Use SQLite database file
 	dbPath := os.Getenv("DB_PATH")

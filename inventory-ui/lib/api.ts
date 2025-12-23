@@ -1,7 +1,6 @@
 import { Item, CreateItem } from "./types";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_LOCAL_API_URL || "http://localhost:8080";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://caversham-inventory-api.onrender.com";
 
 export async function getInventory(): Promise<Item[]> {
   try {
