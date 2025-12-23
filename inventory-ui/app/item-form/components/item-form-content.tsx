@@ -39,8 +39,7 @@ const formSchema = z.object({
 
 export function ItemFormContent() {
   const { fetchInventory } = useInventoryStore();
-  const { setDialogOpen, selectedItem } = useDialogStore();
-  console.log(selectedItem);
+  const { setDialogOpen, selectedItem } = useDialogStore();  
 
   const cardTitle = selectedItem ? "Edit Item" : "Create Item";
   const cardDescription = selectedItem ? "Edit the item details below." : "Create a new Item by filling out the form below.";
