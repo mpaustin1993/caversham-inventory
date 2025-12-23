@@ -13,7 +13,7 @@ import (
 var insert = "INSERT INTO inventory (item_name, category, quantity, unit, location, expiration_date, restock_threshold, note) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, item_name, category, quantity, unit, location, expiration_date, restock_threshold, note;"
 
 func CreateItem(connection *sql.DB, w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("Received %s request for %s\n", r.Method, r.URL.Path)	
+	fmt.Printf("Received %s request for %s\n", r.Method, r.URL.Path)
 	if r.Method != "POST" {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return

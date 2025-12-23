@@ -13,7 +13,7 @@ import (
 var update = "UPDATE inventory SET item_name = $2, category = $3, quantity = $4, unit = $5, location = $6, expiration_date = $7, restock_threshold = $8, note = $9 WHERE id = $1 RETURNING id, item_name, category, quantity, unit, location, expiration_date, restock_threshold, note;"
 
 func UpdateItem(connection *sql.DB, w http.ResponseWriter, r *http.Request, id string) {
-	fmt.Printf("Received %s request for %s\n", r.Method, r.URL.Path)	
+	fmt.Printf("Received %s request for %s\n", r.Method, r.URL.Path)
 	if r.Method != "PUT" {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return

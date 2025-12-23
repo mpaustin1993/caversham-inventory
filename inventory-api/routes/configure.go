@@ -7,9 +7,9 @@ import (
 )
 
 func enableCORS(w http.ResponseWriter) {
-    w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-    w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }
 
 func Configure(db *sql.DB) {
@@ -24,7 +24,7 @@ func Configure(db *sql.DB) {
 	})
 
 	http.HandleFunc("/inventory/{id}", func(w http.ResponseWriter, r *http.Request) {
-		enableCORS(w)		
+		enableCORS(w)
 		switch r.Method {
 		case http.MethodPut:
 			handlers.UpdateItem(db, w, r, r.PathValue("id"))

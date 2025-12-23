@@ -13,7 +13,7 @@ import (
 var delete = "DELETE FROM inventory WHERE id = $1 RETURNING id, item_name, category, quantity, unit, location, expiration_date, restock_threshold, note;"
 
 func DeleteItem(connection *sql.DB, w http.ResponseWriter, r *http.Request, id string) {
-	fmt.Printf("Received %s request for %s\n", r.Method, r.URL.Path)	
+	fmt.Printf("Received %s request for %s\n", r.Method, r.URL.Path)
 	if r.Method != "DELETE" {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
