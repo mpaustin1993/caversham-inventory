@@ -1,6 +1,7 @@
 import { Item, CreateItem } from "./types";
 
-const API_URL = process.env.NEXT_PUBLIC_LOCAL_API_URL || "http://localhost:8080";
+const API_URL =
+  process.env.NEXT_PUBLIC_LOCAL_API_URL || "http://localhost:8080";
 
 export async function getInventory(): Promise<Item[]> {
   try {
@@ -18,10 +19,10 @@ export async function getInventory(): Promise<Item[]> {
 
 export async function createItem(item: CreateItem): Promise<Item | null> {
   try {
-    const response = await fetch(`${API_URL}/inventory`,{
-      method: 'POST',
+    const response = await fetch(`${API_URL}/inventory`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(item),
     });
@@ -36,12 +37,15 @@ export async function createItem(item: CreateItem): Promise<Item | null> {
   }
 }
 
-export async function updateItem(id: number, item: CreateItem): Promise<Item | null> {
+export async function updateItem(
+  id: number,
+  item: CreateItem,
+): Promise<Item | null> {
   try {
-    const response = await fetch(`${API_URL}/inventory/${id}`,{
-      method: 'PUT',
+    const response = await fetch(`${API_URL}/inventory/${id}`, {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(item),
     });
@@ -58,10 +62,10 @@ export async function updateItem(id: number, item: CreateItem): Promise<Item | n
 
 export async function deleteItem(id: number): Promise<Item | null> {
   try {
-    const response = await fetch(`${API_URL}/inventory/${id}`,{
-      method: 'DELETE',
+    const response = await fetch(`${API_URL}/inventory/${id}`, {
+      method: "DELETE",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     if (!response.ok) {

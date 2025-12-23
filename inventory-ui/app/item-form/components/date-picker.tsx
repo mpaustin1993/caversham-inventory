@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
+import * as React from "react";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 export function DatePicker({
   id,
@@ -18,7 +18,7 @@ export function DatePicker({
   value,
   onChange,
   onBlur,
-  "aria-invalid": ariaInvalid
+  "aria-invalid": ariaInvalid,
 }: {
   id?: string;
   name?: string;
@@ -32,8 +32,8 @@ export function DatePicker({
   if (value) {
     if (typeof value === "string" && value) {
       // Extract YYYY-MM-DD from any date string format
-      const dateOnly = value.split('T')[0];
-      const [year, month, day] = dateOnly.split('-').map(Number);
+      const dateOnly = value.split("T")[0];
+      const [year, month, day] = dateOnly.split("-").map(Number);
       date = new Date(year, month - 1, day); // month is 0-indexed
     } else if (value instanceof Date) {
       date = value;
@@ -64,8 +64,8 @@ export function DatePicker({
             if (onChange) {
               if (d) {
                 const year = d.getFullYear();
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                const day = String(d.getDate()).padStart(2, '0');
+                const month = String(d.getMonth() + 1).padStart(2, "0");
+                const day = String(d.getDate()).padStart(2, "0");
                 onChange(`${year}-${month}-${day}`);
               } else {
                 onChange("");

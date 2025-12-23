@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";

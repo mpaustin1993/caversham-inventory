@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import * as z from "zod"
-import { Input } from "@/components/ui/input"
-import { useForm } from "@tanstack/react-form"
-import { toast } from "sonner"
+import * as z from "zod";
+import { Input } from "@/components/ui/input";
+import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
 
 import { DatePicker } from "./date-picker";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,18 +14,17 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
-  Field,  
+  Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
+} from "@/components/ui/field";
 import { createItem, updateItem } from "../../../lib/api";
 import { useInventoryStore } from "../../../lib/inventory-store";
 import { useDialogStore } from "../../../lib/dialog-store";
 
- 
 const formSchema = z.object({
   item_name: z.string().min(1, "*"),
   category: z.string().min(1, "*"),
@@ -35,14 +34,16 @@ const formSchema = z.object({
   expiration_date: z.string().min(1, "*"),
   restock_threshold: z.number().min(1, "*"),
   note: z.string(),
-})
+});
 
 export function ItemFormContent() {
   const { fetchInventory } = useInventoryStore();
-  const { setDialogOpen, selectedItem } = useDialogStore();  
+  const { setDialogOpen, selectedItem } = useDialogStore();
 
   const cardTitle = selectedItem ? "Edit Item" : "Create Item";
-  const cardDescription = selectedItem ? "Edit the item details below." : "Create a new Item by filling out the form below.";
+  const cardDescription = selectedItem
+    ? "Edit the item details below."
+    : "Create a new Item by filling out the form below.";
   const submitButtonText = selectedItem ? "Update" : "Create";
 
   const form = useForm({
@@ -52,7 +53,9 @@ export function ItemFormContent() {
       quantity: selectedItem ? selectedItem.quantity : 0,
       unit: selectedItem ? selectedItem.unit : "",
       location: selectedItem ? selectedItem.location : "",
-      expiration_date: selectedItem ? selectedItem.expiration_date.split('T')[0] : new Date().toISOString().split('T')[0],
+      expiration_date: selectedItem
+        ? selectedItem.expiration_date.split("T")[0]
+        : new Date().toISOString().split("T")[0],
       restock_threshold: selectedItem ? selectedItem.restock_threshold : 0,
       note: selectedItem ? selectedItem.note : "",
     },
@@ -63,41 +66,39 @@ export function ItemFormContent() {
       if (selectedItem) {
         updateItem(selectedItem.id, value).then((updatedItem) => {
           if (updatedItem) {
-            toast.success("Inventory item updated successfully")
+            toast.success("Inventory item updated successfully");
             fetchInventory();
-            form.reset()
+            form.reset();
             setDialogOpen(false);
           } else {
-            toast.error("Failed to update item")
+            toast.error("Failed to update item");
           }
-        })
+        });
       } else {
         createItem(value).then((createdItem) => {
           if (createdItem) {
-            toast.success("Inventory item created successfully")
+            toast.success("Inventory item created successfully");
             fetchInventory();
-            form.reset()
+            form.reset();
           } else {
-            toast.error("Failed to create item")
+            toast.error("Failed to create item");
           }
-        })
+        });
       }
     },
-  })
+  });
   return (
     <Card className="w-full sm:max-w-md">
       <CardHeader>
-        <CardTitle>{ cardTitle }</CardTitle>
-        <CardDescription>
-          { cardDescription}
-        </CardDescription>
+        <CardTitle>{cardTitle}</CardTitle>
+        <CardDescription>{cardDescription}</CardDescription>
       </CardHeader>
       <CardContent>
         <form
           id="item-form"
           onSubmit={(e) => {
-            e.preventDefault()
-            form.handleSubmit()
+            e.preventDefault();
+            form.handleSubmit();
           }}
         >
           <FieldGroup>
@@ -105,205 +106,298 @@ export function ItemFormContent() {
               name="item_name"
               children={(field) => {
                 const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                  field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
-                  <Field orientation="horizontal" className="items-center gap-3" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name} className="w-28">Name</FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                        placeholder="Name"
-                        autoComplete="off"
-                        className="w-full"
+                  <Field
+                    orientation="horizontal"
+                    className="items-center gap-3"
+                    data-invalid={isInvalid}
+                  >
+                    <FieldLabel htmlFor={field.name} className="w-28">
+                      Name
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                      placeholder="Name"
+                      autoComplete="off"
+                      className="w-full"
+                    />
+                    {isInvalid && (
+                      <FieldError
+                        className="mt-1"
+                        errors={field.state.meta.errors}
                       />
-                      {isInvalid && (
-                        <FieldError className="mt-1" errors={field.state.meta.errors} />
-                      )}
+                    )}
                   </Field>
-                )
+                );
               }}
             />
             <form.Field
               name="category"
               children={(field) => {
                 const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                  field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
-                  <Field orientation="horizontal" className="items-center gap-3" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name} className="w-28">Category</FieldLabel>                    
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                        placeholder="Category"
-                        autoComplete="off"
-                        className="w-full"
+                  <Field
+                    orientation="horizontal"
+                    className="items-center gap-3"
+                    data-invalid={isInvalid}
+                  >
+                    <FieldLabel htmlFor={field.name} className="w-28">
+                      Category
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                      placeholder="Category"
+                      autoComplete="off"
+                      className="w-full"
+                    />
+                    {isInvalid && (
+                      <FieldError
+                        className="mt-1"
+                        errors={field.state.meta.errors}
                       />
-                      {isInvalid && (
-                        <FieldError className="mt-1" errors={field.state.meta.errors} />
-                      )}
+                    )}
                   </Field>
-                )
+                );
               }}
             />
             <form.Field
               name="quantity"
               children={(field) => {
                 const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                  field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
-                  <Field orientation="horizontal" className="items-center gap-3" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name} className="w-28">Quantity</FieldLabel>                    
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={!isNaN(Number(field.state.value)) ? field.state.value : 0}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(!isNaN(Number(e.target.value)) ? parseInt(e.target.value) : 0)}
-                        aria-invalid={isInvalid}
-                        placeholder="Quantity"
-                        autoComplete="off"
-                        className="w-full"
+                  <Field
+                    orientation="horizontal"
+                    className="items-center gap-3"
+                    data-invalid={isInvalid}
+                  >
+                    <FieldLabel htmlFor={field.name} className="w-28">
+                      Quantity
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={
+                        !isNaN(Number(field.state.value))
+                          ? field.state.value
+                          : 0
+                      }
+                      onBlur={field.handleBlur}
+                      onChange={(e) =>
+                        field.handleChange(
+                          !isNaN(Number(e.target.value))
+                            ? parseInt(e.target.value)
+                            : 0,
+                        )
+                      }
+                      aria-invalid={isInvalid}
+                      placeholder="Quantity"
+                      autoComplete="off"
+                      className="w-full"
+                    />
+                    {isInvalid && (
+                      <FieldError
+                        className="mt-1"
+                        errors={field.state.meta.errors}
                       />
-                      {isInvalid && (
-                        <FieldError className="mt-1" errors={field.state.meta.errors} />
-                      )}
+                    )}
                   </Field>
-                )
+                );
               }}
             />
             <form.Field
               name="unit"
               children={(field) => {
                 const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                  field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
-                  <Field orientation="horizontal" className="items-center gap-3" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name} className="w-28">Unit</FieldLabel>                    
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                        placeholder="Unit"
-                        autoComplete="off"
-                        className="w-full"
+                  <Field
+                    orientation="horizontal"
+                    className="items-center gap-3"
+                    data-invalid={isInvalid}
+                  >
+                    <FieldLabel htmlFor={field.name} className="w-28">
+                      Unit
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                      placeholder="Unit"
+                      autoComplete="off"
+                      className="w-full"
+                    />
+                    {isInvalid && (
+                      <FieldError
+                        className="mt-1"
+                        errors={field.state.meta.errors}
                       />
-                      {isInvalid && (
-                        <FieldError className="mt-1" errors={field.state.meta.errors} />
-                      )}
+                    )}
                   </Field>
-                )
+                );
               }}
             />
             <form.Field
               name="location"
               children={(field) => {
                 const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                  field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
-                  <Field orientation="horizontal" className="items-center gap-3" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name} className="w-28">Location</FieldLabel>                    
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                        placeholder="Location"
-                        autoComplete="off"
-                        className="w-full"
+                  <Field
+                    orientation="horizontal"
+                    className="items-center gap-3"
+                    data-invalid={isInvalid}
+                  >
+                    <FieldLabel htmlFor={field.name} className="w-28">
+                      Location
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                      placeholder="Location"
+                      autoComplete="off"
+                      className="w-full"
+                    />
+                    {isInvalid && (
+                      <FieldError
+                        className="mt-1"
+                        errors={field.state.meta.errors}
                       />
-                      {isInvalid && (
-                        <FieldError className="mt-1" errors={field.state.meta.errors} />
-                      )}
+                    )}
                   </Field>
-                )
+                );
               }}
             />
             <form.Field
               name="expiration_date"
               children={(field) => {
                 const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                  field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
-                  <Field orientation="horizontal" className="items-center" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name} className="w-28">Expiration<br /> Date</FieldLabel>                    
-                      <DatePicker
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(value) => field.handleChange(value)}
-                        aria-invalid={isInvalid}
+                  <Field
+                    orientation="horizontal"
+                    className="items-center"
+                    data-invalid={isInvalid}
+                  >
+                    <FieldLabel htmlFor={field.name} className="w-28">
+                      Expiration
+                      <br /> Date
+                    </FieldLabel>
+                    <DatePicker
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(value) => field.handleChange(value)}
+                      aria-invalid={isInvalid}
+                    />
+                    {isInvalid && (
+                      <FieldError
+                        className="mt-1"
+                        errors={field.state.meta.errors}
                       />
-                      {isInvalid && (
-                        <FieldError className="mt-1" errors={field.state.meta.errors} />
-                      )}                    
+                    )}
                   </Field>
-                )
+                );
               }}
             />
             <form.Field
               name="restock_threshold"
               children={(field) => {
                 const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                  field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
-                  <Field orientation="horizontal" className="items-center gap-3" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name} className="w-28">Restock Threshold</FieldLabel>                    
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={!isNaN(Number(field.state.value)) ? field.state.value : 0}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(!isNaN(Number(e.target.value)) ? parseInt(e.target.value) : 0)}
-                        aria-invalid={isInvalid}
-                        placeholder="Restock Threshold"
-                        autoComplete="off"
-                        className="w-full"
+                  <Field
+                    orientation="horizontal"
+                    className="items-center gap-3"
+                    data-invalid={isInvalid}
+                  >
+                    <FieldLabel htmlFor={field.name} className="w-28">
+                      Restock Threshold
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={
+                        !isNaN(Number(field.state.value))
+                          ? field.state.value
+                          : 0
+                      }
+                      onBlur={field.handleBlur}
+                      onChange={(e) =>
+                        field.handleChange(
+                          !isNaN(Number(e.target.value))
+                            ? parseInt(e.target.value)
+                            : 0,
+                        )
+                      }
+                      aria-invalid={isInvalid}
+                      placeholder="Restock Threshold"
+                      autoComplete="off"
+                      className="w-full"
+                    />
+                    {isInvalid && (
+                      <FieldError
+                        className="mt-1"
+                        errors={field.state.meta.errors}
                       />
-                      {isInvalid && (
-                        <FieldError className="mt-1" errors={field.state.meta.errors} />
-                      )}
+                    )}
                   </Field>
-                )
+                );
               }}
             />
             <form.Field
               name="note"
               children={(field) => {
                 const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
+                  field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
-                  <Field orientation="horizontal" className="items-center gap-3" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name} className="w-28">Note</FieldLabel>                    
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        aria-invalid={isInvalid}
-                        placeholder="Note"
-                        autoComplete="off"
-                        className="w-full"
+                  <Field
+                    orientation="horizontal"
+                    className="items-center gap-3"
+                    data-invalid={isInvalid}
+                  >
+                    <FieldLabel htmlFor={field.name} className="w-28">
+                      Note
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                      placeholder="Note"
+                      autoComplete="off"
+                      className="w-full"
+                    />
+                    {isInvalid && (
+                      <FieldError
+                        className="mt-1"
+                        errors={field.state.meta.errors}
                       />
-                      {isInvalid && (
-                        <FieldError className="mt-1" errors={field.state.meta.errors} />
-                      )}
+                    )}
                   </Field>
-                )
+                );
               }}
             />
           </FieldGroup>
@@ -320,5 +414,5 @@ export function ItemFormContent() {
         </Field>
       </CardFooter>
     </Card>
-  )
+  );
 }

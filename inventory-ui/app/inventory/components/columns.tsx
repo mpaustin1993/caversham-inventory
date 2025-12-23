@@ -1,6 +1,6 @@
 "use client";
 
-import { ColumnDef} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { Item } from "../../../lib/types";
@@ -54,7 +54,7 @@ export const columns: ColumnDef<Item>[] = [
   },
   {
     accessorKey: "expiration_date",
-   header: ({ column }) => {
+    header: ({ column }) => {
       return <SortingButton column={column} header="Expiration Date" />;
     },
     cell: ({ row }) => {
@@ -69,7 +69,11 @@ export const columns: ColumnDef<Item>[] = [
       const formattedDate = `${month}/${day}/${year}`; // Convert to MM/DD/YYYY
 
       // Check if date is before today
-      const expirationDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      const expirationDate = new Date(
+        parseInt(year),
+        parseInt(month) - 1,
+        parseInt(day),
+      );
       const today = new Date();
       today.setHours(0, 0, 0, 0); // Reset time to compare dates only
       const isExpired = expirationDate < today;
@@ -100,7 +104,7 @@ export const columns: ColumnDef<Item>[] = [
     cell: ({ row }) => {
       const { setDialogOpen, setSelectedItem } = useDialogStore();
       const { fetchInventory } = useInventoryStore();
-      
+
       const handleEdit = () => {
         setSelectedItem(row.original);
         setDialogOpen(true);
@@ -110,8 +114,8 @@ export const columns: ColumnDef<Item>[] = [
         deleteItem(row.original.id).then(() => {
           fetchInventory();
         });
-      }
-      
+      };
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -123,9 +127,7 @@ export const columns: ColumnDef<Item>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleEdit}>
-              Edit
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
             <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

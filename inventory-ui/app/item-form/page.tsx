@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
 import {
   Dialog,
   DialogContent,
-  DialogTitle,  
+  DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { ItemFormContent } from "./components/item-form-content";
 import { useDialogStore } from "../../lib/dialog-store";
 import { DialogDescription } from "@radix-ui/react-dialog";
 
 export function ItemForm() {
   const { isDialogOpen, setDialogOpen, setSelectedItem } = useDialogStore();
-  
+
   const handleOpenChange = (open: boolean) => {
     setDialogOpen(open);
     if (!open) {
@@ -22,10 +22,10 @@ export function ItemForm() {
   };
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>      
+    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           onClick={() => {
             setSelectedItem(null); // Creating new item
             setDialogOpen(true);
@@ -35,10 +35,10 @@ export function ItemForm() {
         </Button>
       </DialogTrigger>
       <DialogContent className="w-80">
-        <DialogTitle className="sr-only"/>
-        <DialogDescription className="sr-only"/>
+        <DialogTitle className="sr-only" />
+        <DialogDescription className="sr-only" />
         <ItemFormContent />
       </DialogContent>
     </Dialog>
-  )
+  );
 }
