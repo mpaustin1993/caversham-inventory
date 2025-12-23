@@ -11,7 +11,7 @@ import { ItemFormContent } from "./components/item-form-content";
 import { useDialogStore } from "../../lib/dialog-store";
 import { DialogDescription } from "@radix-ui/react-dialog";
 
-export function ItemForm() {
+export default function ItemForm() {
   const { isDialogOpen, setDialogOpen, setSelectedItem } = useDialogStore();
 
   const handleOpenChange = (open: boolean) => {

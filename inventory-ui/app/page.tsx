@@ -3,7 +3,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 config.autoAddCss = false;
 
 import HomePage from "./inventory/page";
-import { ItemForm } from "./item-form/page";
+import ItemForm from "./item-form/page";
 
 export default function Home() {
   return (
