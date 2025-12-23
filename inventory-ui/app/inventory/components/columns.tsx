@@ -1,12 +1,12 @@
 "use client";
 
-import * as React from "react"
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef} from "@tanstack/react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { Item } from "../../../lib/types";
 
-import { MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { SortingButton } from "./sorting-button";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,27 +24,39 @@ import { deleteItem } from "@/lib/api";
 export const columns: ColumnDef<Item>[] = [
   {
     accessorKey: "category",
-    header: "Category",
+    header: ({ column }) => {
+      return <SortingButton column={column} header="Category" />;
+    },
   },
   {
     accessorKey: "quantity",
-    header: "Quantity",
+    header: ({ column }) => {
+      return <SortingButton column={column} header="Quantity" />;
+    },
   },
   {
     accessorKey: "unit",
-    header: "Unit",
+    header: ({ column }) => {
+      return <SortingButton column={column} header="Unit" />;
+    },
   },
   {
     accessorKey: "item_name",
-    header: "Item",
+    header: ({ column }) => {
+      return <SortingButton column={column} header="Item" />;
+    },
   },
   {
     accessorKey: "location",
-    header: "Location",
+    header: ({ column }) => {
+      return <SortingButton column={column} header="Location" />;
+    },
   },
   {
     accessorKey: "expiration_date",
-    header: "Expiration Date",
+   header: ({ column }) => {
+      return <SortingButton column={column} header="Expiration Date" />;
+    },
     cell: ({ row }) => {
       const dateValue = row.getValue("expiration_date");
       if (!dateValue) return <div>-</div>;
@@ -56,7 +68,17 @@ export const columns: ColumnDef<Item>[] = [
       const [year, month, day] = formatted.split("-");
       const formattedDate = `${month}/${day}/${year}`; // Convert to MM/DD/YYYY
 
-      return <div>{formattedDate}</div>;
+      // Check if date is before today
+      const expirationDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset time to compare dates only
+      const isExpired = expirationDate < today;
+
+      return (
+        <div className={isExpired ? "text-red-600 font-bold" : ""}>
+          {formattedDate}
+        </div>
+      );
     },
   },
   {
