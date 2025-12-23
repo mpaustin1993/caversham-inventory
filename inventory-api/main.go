@@ -8,28 +8,49 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	_ "github.com/lib/pq"
+	_ "modernc.org/sqlite" // SQLite driver (pure Go)
 )
 
 var db *sql.DB
 
 func init() {
-	// Load .env
-	err := godotenv.Load("../.env.local")
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	// Load .env (optional for SQLite)
+	_ = godotenv.Load("../.env.local")
+
+	// Use SQLite database file
+	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		dbPath = "./inventory.db" // Default local path
 	}
 
-	// Read variables
-	dbURL := os.Getenv("DB_URL")
-	if dbURL == "" {
-		log.Fatal("DB_URL environment variable is not set")
-	}
-
-	// Connect to the database
-	db, err = sql.Open("postgres", dbURL)
+	// Connect to SQLite database (creates if doesn't exist)
+	var err error
+	db, err = sql.Open("sqlite", dbPath)
 	if err != nil {
 		log.Fatal("Error connecting to database:", err)
+	}
+
+	// Create tables if they don't exist
+	createTables()
+}
+
+func createTables() {
+	schema := `
+	CREATE TABLE IF NOT EXISTS inventory (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		item_name TEXT NOT NULL,
+		category TEXT NOT NULL,
+		quantity INTEGER NOT NULL,
+		unit TEXT NOT NULL,
+		location TEXT NOT NULL,
+		expiration_date TEXT NOT NULL,
+		restock_threshold INTEGER NOT NULL,
+		note TEXT
+	);
+	`
+	_, err := db.Exec(schema)
+	if err != nil {
+		log.Fatal("Error creating tables:", err)
 	}
 }
 
