@@ -8,50 +8,42 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	_ "modernc.org/sqlite" // SQLite driver (pure Go)
+	_ "github.com/lib/pq" // PostgreSQL driver
 )
 
 var db *sql.DB
 
 func init() {
-	// Load .env (optional for SQLite)
+	// Load .env
 	_ = godotenv.Load("../.env")
 
-	// Use SQLite database file
-	dbPath := os.Getenv("DB_PATH")
-	if dbPath == "" {
-		dbPath = "./inventory.db" // Default local path
+	// Get PostgreSQL connection string from environment
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		log.Fatal("DATABASE_URL environment variable is required")
 	}
 
-	// Connect to SQLite database (creates if doesn't exist)
+	// Connect to PostgreSQL database
 	var err error
-	db, err = sql.Open("sqlite", dbPath)
+	db, err = sql.Open("postgres", dbURL)
 	if err != nil {
 		log.Fatal("Error connecting to database:", err)
 	}
 
-	// Create tables if they don't exist
-	createTables()
-}
-
-func createTables() {
-	schema := `
-	CREATE TABLE IF NOT EXISTS inventory (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		item_name TEXT NOT NULL,
-		category TEXT NOT NULL,
-		quantity INTEGER NOT NULL,
-		unit TEXT NOT NULL,
-		location TEXT NOT NULL,
-		expiration_date TEXT NOT NULL,
-		restock_threshold INTEGER NOT NULL,
-		note TEXT
-	);
-	`
-	_, err := db.Exec(schema)
-	if err != nil {
-		log.Fatal("Error creating tables:", err)
+	// Test the connection
+	if err = db.Ping(); err != nil {
+		log.Fatal("Error pinging database:", err)
 	}
+
+	log.Println("Connected to PostgreSQL database")
+
+	// Set search path to use caversham schema
+	_, err = db.Exec("SET search_path TO caversham, public")
+	if err != nil {
+		log.Fatal("Error setting search path:", err)
+	}
+
+	log.Println("Using caversham schema")
 }
 
 func main() {
@@ -59,6 +51,12 @@ func main() {
 
 	routes.Configure(db)
 
-	log.Println("Server starting on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	// Use PORT environment variable (required by Render.com and other cloud platforms)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default for local development
+	}
+
+	log.Printf("Server starting on :%s\n", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
