@@ -54,7 +54,7 @@ func main() {
 	// Use PORT environment variable (required by Render.com and other cloud platforms)
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080" // Default for local development
+		port = "8080" // Default port if not specified
 	}
 
 	log.Printf("Server starting on :%s\n", port)
